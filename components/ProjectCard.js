@@ -13,7 +13,9 @@ const avatarBorderColor = (index) => {
   return colors[colorIndex];
 };
 
-const ProjectCard = ({ assignees, repo }) => {
+const ProjectCard = ({ assignees, repo, pr }) => {
+  //I filter the trainees, as some of the mentors have admin rights over the project and count as assignee
+  const trainees = pr.filter((el) => el.total_count !== 0);
   const currentDate = new Date();
   const options = { day: "numeric", month: "long", year: "numeric" };
   const formattedDate = currentDate.toLocaleDateString(undefined, options);
@@ -28,6 +30,8 @@ const ProjectCard = ({ assignees, repo }) => {
     }
     return "";
   };
+  // console.log(trainees.map((el) => el.items[0].user.login));
+  // console.log(trainees.map((el) => el.items[0].user.avatar_url));
 
   return (
     <div className=" flex flex-cols-1 gap-4 max-w-sm bg-[#1A1E1F] p-0 rounded-2xl">
@@ -49,13 +53,13 @@ const ProjectCard = ({ assignees, repo }) => {
             <span className="w-12 h-2 bg-gray-500 rounded-full mx-1"></span>
           </div>{" "}
           <div className="flex just border rounded-full border-gray-600 p-1">
-            {assignees.map((assignee, index) => (
+            {trainees.map((trainee, index) => (
               <Image
-                key={assignee.id}
-                src={assignee.avatar_url}
+                key={trainee.items[0].user.id}
+                src={trainee.items[0].user.avatar_url}
                 width={40}
                 height={40}
-                alt={assignee.login}
+                alt={trainee.items[0].user.login}
                 className={`w-11 h-11 rounded-full border-2 object-cover
                  ${avatarBorderColor(index)}
                 }`}

@@ -35,11 +35,6 @@ const TeamOverview = () => {
     fetchData();
   }, []);
 
-  // console.log("repo", repo);
-  // console.log("assignees", assignees);
-  // console.log("issues", issues);
-  // console.log("pr", pr);
-
   return isLoading ? (
     <div className="flex items-center justify-center h-screen">
       <svg
@@ -62,7 +57,7 @@ const TeamOverview = () => {
         Track you projects, tasks & team activity here
       </p>
       <div className=" flex flex-nowrap justify-between mt-4 gap-4 p-6 ">
-        <ProjectCard assignees={assignees} repo={repo} />
+        <ProjectCard assignees={assignees} repo={repo} pr={pr} />
         <OverallInfoCard issuesClosed={issuesClosed} issuesOpen={issuesOpen} />
         <TeamActivity assignees={assignees} pr={pr} />
       </div>
