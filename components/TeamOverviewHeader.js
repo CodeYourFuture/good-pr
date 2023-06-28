@@ -12,15 +12,24 @@ const TeamOverview = () => {
   const [issuesOpen, setIssuesOpen] = useState([]);
   const [pr, setPR] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/api/gitHubAPI");
-      const data = await response.json();
-      setRepo(data[0]);
-      setAssignees(data[1]);
-      setIssuesClosed(data[2]);
-      setIssuesOpen(data[3]);
-      setPR(data[4]);
+      setIsLoading(true);
+      try {
+        const response = await fetch("/api/gitHubAPI");
+        const data = await response.json();
+        setRepo(data[0]);
+        setAssignees(data[1]);
+        setIssuesClosed(data[2]);
+        setIssuesOpen(data[3]);
+        setPR(data[4]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchData();
@@ -31,7 +40,16 @@ const TeamOverview = () => {
   // console.log("issues", issues);
   // console.log("pr", pr);
 
-  return (
+  return isLoading ? (
+    <div className="flex items-center justify-center h-screen">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="w-12 h-12 rounded-full bg-[#36BCBA] animate-pulse"></div>
+        <div className="w-16 h-2 bg-gray-300 relative">
+          <div className="h-full bg-[#36BCBA] absolute top-0 left-0 animate-slide"></div>
+        </div>
+      </div>
+    </div>
+  ) : (
     <div class=" p-6">
       {/* Content for the right div */}
       <h1 className="font-bold text-white p-4 ">Team Overview</h1>
