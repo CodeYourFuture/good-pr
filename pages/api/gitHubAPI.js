@@ -10,12 +10,9 @@ export default async (req, res) => {
   const repository = "good-pr";
 
   try {
-    const [repoData, assigneesData, issuesData] = await Promise.all([
+    const [repoData, assigneesData] = await Promise.all([
       octokit.request(`GET /repos/${owner}/${repository}`),
       octokit.request(`GET /repos/${owner}/${repository}/assignees`),
-      octokit.request(`GET /repos/${owner}/${repository}/issues`, {
-        state: "all",
-      }),
     ]);
 
     const contributorsNames = assigneesData.data.map((el) => el.login);
