@@ -10,8 +10,6 @@ const TeamOverview = () => {
   const [assignees, setAssignees] = useState([]);
   const [issuesClosed, setIssuesClosed] = useState([]);
   const [issuesOpen, setIssuesOpen] = useState([]);
-  const [contributors, setContributors] = useState([]);
-  const [languages, setLanguages] = useState({});
   const [pr, setPR] = useState([]);
 
   useEffect(() => {
@@ -22,9 +20,7 @@ const TeamOverview = () => {
       setAssignees(data[1]);
       setIssuesClosed(data[2]);
       setIssuesOpen(data[3]);
-      setContributors(data[4]);
-      setLanguages(data[5]);
-      setPR(data[6]);
+      setPR(data[4]);
     };
 
     fetchData();
@@ -33,8 +29,6 @@ const TeamOverview = () => {
   // console.log("repo", repo);
   // console.log("assignees", assignees);
   // console.log("issues", issues);
-  // console.log("contributors", contributors);
-  // console.log("languages", languages);
   // console.log("pr", pr);
 
   return (
