@@ -11,7 +11,6 @@ const TeamOverview = () => {
   const [issuesClosed, setIssuesClosed] = useState([]);
   const [issuesOpen, setIssuesOpen] = useState([]);
   const [pr, setPR] = useState([]);
-
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -59,7 +58,7 @@ const TeamOverview = () => {
       <div className=" flex flex-nowrap justify-between mt-4 gap-4 p-6 ">
         <ProjectCard assignees={assignees} repo={repo} pr={pr} />
         <OverallInfoCard issuesClosed={issuesClosed} issuesOpen={issuesOpen} />
-        <TeamActivity assignees={assignees} pr={pr} />
+        <TeamActivity pr={pr} />
       </div>
       <TaskActivity issuesClosed={issuesClosed} issuesOpen={issuesOpen} />
     </div>

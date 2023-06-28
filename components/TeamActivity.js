@@ -4,7 +4,9 @@ import { Chart, registerables } from "chart.js";
 
 Chart.register(...registerables);
 
-export default function TeamActivity({ assignees, pr }) {
+export default function TeamActivity({ pr }) {
+  const trainees = pr.filter((el) => el.items.length !== 0);
+  console.log(trainees.map((trainee) => trainee.items[0].user.login));
   const chartRef = useRef(null);
 
   let totalContributions = 0;
@@ -21,7 +23,7 @@ export default function TeamActivity({ assignees, pr }) {
 
   useEffect(() => {
     const chartData = {
-      labels: assignees.map((user) => user.login),
+      labels: trainees.map((trainee) => trainee.items[0].user.login),
       datasets: [
         {
           label: "Contributions",

@@ -30,8 +30,6 @@ const ProjectCard = ({ assignees, repo, pr }) => {
     }
     return "";
   };
-  // console.log(trainees.map((el) => el.items[0].user.login));
-  // console.log(trainees.map((el) => el.items[0].user.avatar_url));
 
   return (
     <div className=" flex flex-cols-1 gap-4 max-w-sm bg-[#1A1E1F] p-0 rounded-2xl">
