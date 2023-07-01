@@ -11,7 +11,7 @@ export default function TeamCard({ group, getRandomAvatar }) {
           {group.groupName}
         </div>
         <div className="text-center text-black text-[18px] font-semibold mt-1">
-          {group.updatedDate}
+          {group.projectName}
         </div>
       </div>
       <div className="bg-[#FFFFFF] flex flex-row items-end justify-center flex-1 h-1/3 mb-2">
@@ -20,7 +20,7 @@ export default function TeamCard({ group, getRandomAvatar }) {
             Last Updated:
           </div>
           <div className="text-center text-[18px] font-bold">
-            {group.projectName}
+            {group.updatedDate}
           </div>
         </div>
         <div className="flex-1 ">
