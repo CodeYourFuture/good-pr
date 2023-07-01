@@ -10,7 +10,7 @@ export default function TeamCard({ group, getRandomAvatar }) {
   };
 
   return (
-    <div className=" shadow-[0_0px_20px_-5px_white] font-normal gap-4 max-w-sm bg-[#1a1e1f] p-1 w-[360px] text-white h-[370px]  rounded-2xl">
+    <div className=" flex flex-col justify-between mt-4 gap-4 p-6 h-80 w-[22rem] shadow-[0_0px_20px_-5px_white] font-normal max-w-sm bg-[#1a1e1f]  text-white  rounded-2xl">
       <div className="bg-[#070e0e] rounded-2xl flex flex-col items-center justify-center flex-2 h-2/3">
         <img
           className="w-[100px] h-[100px] rounded-full  mb-3"
