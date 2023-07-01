@@ -13,7 +13,7 @@ export default function GroupsPage() {
       {groupsData.groups.map((group) => (
         <div
           key={group.id}
-          className="flex flex-col  mr-px gap-2 relative items-center "
+          className="flex  flex-nowrap justify-between flex-col  mr-px gap-2 relative items-center "
         >
           <TeamCard group={group} getRandomAvatar={getRandomAvatar} />
         </div>

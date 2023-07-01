@@ -1,34 +1,42 @@
 export default function TeamCard({ group, getRandomAvatar }) {
+  const lastActivityDate = () => {
+    if (group.updatedDate) {
+      const updatedAt = new Date(group.updatedDate);
+      const options = { day: "numeric", month: "long", year: "numeric" };
+      const formattedDate = updatedAt.toLocaleDateString(undefined, options);
+      return formattedDate;
+    }
+    return "";
+  };
+
   return (
-    <div className="bg-[#FFFFFF] p-3 w-[360px] h-[370px] rounded-2xl flex flex-col shadow-[0px_5px_20px_2px_rgba(0,_0,_0,_0.25),_0px_6px_10px_0px_rgba(0,_0,_0,_0.14)]">
-      <div className="bg-[#F6F8FA] rounded-2xl flex flex-col items-center justify-center flex-2 h-2/3">
+    <div className=" shadow-[0_0px_20px_-5px_white] font-normal gap-4 max-w-sm bg-[#1a1e1f] p-1 w-[360px] text-white h-[370px]  rounded-2xl">
+      <div className="bg-[#070e0e] rounded-2xl flex flex-col items-center justify-center flex-2 h-2/3">
         <img
           className="w-[100px] h-[100px] rounded-full  mb-3"
           src={getRandomAvatar(group.collaborators)}
           alt="Placeholder Image"
         />
-        <div className="text-center text-[18px] text-black font-semibold">
+        <div className="text-center text-[18px] text-white ">
           {group.groupName}
         </div>
-        <div className="text-center text-black text-[18px] font-semibold mt-1">
-          {group.updatedDate}
+        <div className="text-center text-white text-[18px]  mt-1">
+          {group.projectName}
         </div>
       </div>
-      <div className="bg-[#FFFFFF] flex flex-row items-end justify-center flex-1 h-1/3 mb-2">
+      <div className="bg-[#1a1e1f] flex flex-row items-end justify-center flex-1 h-1/3 mb-2">
         <div className="flex-1">
-          <div className="text-center text-[18px] font-semibold">
-            Last Updated:
-          </div>
-          <div className="text-center text-[18px] font-bold">
-            {group.projectName}
+          <div className="text-center  ">{lastActivityDate()}</div>
+          <div className="text-center text-[14px] text-[#606467] font-light">
+            Last Update
           </div>
         </div>
         <div className="flex-1 ">
-          <div className="text-center text-[18px] font-semibold">
-            Pull Requests:
+          <div className="text-center ">
+            <p>{group.pullRequests}</p>
           </div>
-          <div className="text-center text-[18px] font-bold ">
-            {group.pullRequests}
+          <div className="text-center text-[14px] text-[#606467] font-light">
+            Pull Requests
           </div>
         </div>
       </div>
