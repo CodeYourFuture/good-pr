@@ -20,7 +20,7 @@ function GroupsPage() {
     fetchData();
   }, []);
 
-  console.log(groups);
+  // console.log(groups);
 
   return (
     <div>

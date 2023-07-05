@@ -2,7 +2,35 @@
 import React, { useEffect, useState } from "react";
 
 const TeamCard = ({ group }) => {
-  return (
+  const owner = group.owner;
+  const repository = group.name;
+
+  const [repo, setRepo] = useState(null);
+  const [pr, setPR] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `/api/gitHubAPI?owner=${owner}&repository=${repository}`
+        );
+        const data = await response.json();
+        setRepo(data[0]);
+        setPR(data[3]);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setIsLoading(true);
+      }
+    };
+
+    fetchData();
+  }, [owner, repository]);
+
+  console.log("repo", repo);
+
+  return isLoading ? null : (
     <div className="flex flex-col justify-around  mb-[5%] gap-4 h-[350px] w-[400px] shadow-[0_0px_20px_-5px_white] font-normal max-w-sm bg-[#1a1e1f] text-white rounded-2xl">
       <div className="bg-[#070e0e] rounded-2xl  flex flex-col items-center justify-center flex-2 h-2/3 p-2">
         <svg
@@ -25,7 +53,7 @@ const TeamCard = ({ group }) => {
       </div>
       <div className="bg-[#1a1e1f] flex flex-row items-end justify-center flex-1 h-1/3 mb-2 py-[5%]">
         <div className="flex-1">
-          <div className="text-center  ">1</div>
+          <div className="text-center  ">{}</div>
           <div className="text-center text-[14px] text-[#606467] font-light">
             Last Update
           </div>
