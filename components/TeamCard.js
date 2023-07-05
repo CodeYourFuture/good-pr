@@ -2,18 +2,20 @@
 import React, { useEffect, useState } from "react";
 
 const TeamCard = ({ group }) => {
-  const owner = group.owner;
-  const repository = group.name;
+  const owner = group && group.owner;
+  const repository = group && group.name;
 
-  const [repo, setRepo] = useState(null);
-  const [pr, setPR] = useState(null);
+  const [repo, setRepo] = useState({});
+  const [pr, setPR] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
         const response = await fetch(
           `/api/gitHubAPI?owner=${owner}&repository=${repository}`
+          // api.github.com/repos/
         );
         const data = await response.json();
         setRepo(data[0]);
@@ -30,7 +32,9 @@ const TeamCard = ({ group }) => {
 
   console.log("repo", repo);
 
-  return isLoading ? null : (
+  return isLoading ? (
+    <p>Lolo</p>
+  ) : (
     <div className="flex flex-col justify-around  mb-[5%] gap-4 h-[350px] w-[400px] shadow-[0_0px_20px_-5px_white] font-normal max-w-sm bg-[#1a1e1f] text-white rounded-2xl">
       <div className="bg-[#070e0e] rounded-2xl  flex flex-col items-center justify-center flex-2 h-2/3 p-2">
         <svg
@@ -45,10 +49,10 @@ const TeamCard = ({ group }) => {
           />
         </svg>
         <div className="text-center text-[18px] text-white ">
-          {group.team_name}
+          {group && group.team_name}
         </div>
         <div className="text-center text-white text-[18px]  mt-1">
-          {group.name}
+          {group && group.name}
         </div>
       </div>
       <div className="bg-[#1a1e1f] flex flex-row items-end justify-center flex-1 h-1/3 mb-2 py-[5%]">

@@ -12,8 +12,8 @@ const cacheExpirationTime = 30 * 60 * 1000;
 
 // eslint-disable-next-line import/no-anonymous-default-export
 const getAPI = async (req, res) => {
-  const owner = req.query.owner; // Get owner from request query parameter
-  const repository = req.query.repository;
+  const owner = "nataliiazab"; // Get owner from request query parameter
+  const repository = "good-pr";
 
   try {
     const [repoData, assigneesData] = await Promise.all([

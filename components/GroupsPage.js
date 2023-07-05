@@ -19,14 +19,16 @@ function GroupsPage() {
 
     fetchData();
   }, []);
+  const oneGroup = groups;
 
-  // console.log(groups);
+  console.log("lc", oneGroup[0]);
 
   return (
     <div>
       {groups.map((group) => (
-        <TeamCard group={group} />
+        <TeamCard group={oneGroup} />
       ))}
+      {/* <TeamCard group={oneGroup[0]} /> */}
     </div>
   );
 }

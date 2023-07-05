@@ -13,25 +13,25 @@ export default function TeamOverview() {
   const [pr, setPR] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch("/api/gitHubAPI");
-        const data = await response.json();
-        setRepo(data[0]);
-        setIssuesClosed(data[1]);
-        setIssuesOpen(data[2]);
-        setPR(data[3]);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       const response = await fetch("/api/gitHubAPI");
+  //       const data = await response.json();
+  //       setRepo(data[0]);
+  //       setIssuesClosed(data[1]);
+  //       setIssuesOpen(data[2]);
+  //       setPR(data[3]);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   return isLoading ? (
     <div className="flex items-center justify-center h-screen">
