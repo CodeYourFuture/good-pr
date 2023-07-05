@@ -1,20 +1,34 @@
-import React from "react";
-import groupsData from "groups.json";
-import TeamCard from "./TeamCard";
+"use client";
+import React, { useEffect, useState } from "react";
 
-export default function GroupsPage() {
-  const getRandomAvatar = (collaborators) => {
-    const randomIndex = Math.floor(Math.random() * collaborators.length);
-    return collaborators[randomIndex].avatar_url;
-  };
+function MyComponent() {
+  const [repos, setRepos] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/repositories");
+        const data = await response.json();
+        setRepos(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log(repos);
 
   return (
-    <div className="flex flex-row flex-wrap gap-4   w-full items-center justify-around">
-      {groupsData.groups.map((group) => (
-        <div key={group.id}>
-          <TeamCard group={group} getRandomAvatar={getRandomAvatar} />
+    <div>
+      {repos.map((repo) => (
+        <div key={repo.id}>
+          <h2>{repo.name}</h2>
         </div>
       ))}
     </div>
   );
 }
+
+export default MyComponent;

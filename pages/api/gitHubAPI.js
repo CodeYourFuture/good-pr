@@ -11,7 +11,7 @@ const octokit = new Octokit({
 const cacheExpirationTime = 30 * 60 * 1000;
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default async (req, res) => {
+const getAPI = async (req, res) => {
   const owner = "nataliiazab";
   const repository = "good-pr";
 
@@ -79,3 +79,4 @@ async function getCached(key, requestFn) {
 
   return response;
 }
+export default getAPI;
