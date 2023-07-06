@@ -14,7 +14,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@octokit/rest": "^19.0.13",
-    "@prisma/client": "^4.16.1",
+    "@prisma/client": "^4.16.2",
     "axios": "^1.4.0",
     "chart.js": "^4.3.0",
     "echarts": "^5.4.2",
