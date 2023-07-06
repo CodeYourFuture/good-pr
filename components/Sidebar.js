@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import SidebarLogo from "@components/SidebarLogo";
 import SidebarDashboard from "@components/SidebarDashboard";
-// import SidebarTeams from "@components/SidebarTeams";
+import SidebarTeams from "@components/SidebarTeams";
 // import SidebarDarkMode from "@components/SidebarDarkMode";
 import { FiMenu } from "react-icons/fi";
 
@@ -54,7 +54,7 @@ export default function Sidebar() {
             <SidebarDashboard />
             {showSidebar && (
               <>
-                {/* <SidebarTeams /> */}
+                <SidebarTeams />
                 {/* <SidebarDarkMode /> */}
               </>
             )}
@@ -68,7 +68,7 @@ export default function Sidebar() {
     <div className="flex flex-col items-center gap-10 pt-14 p-4 md:h-full min-w-sm bg-[#1A1E1F] text-white">
       <SidebarLogo className="w-auto h-8" /> {/* Adjust the desired size */}
       <SidebarDashboard />
-      {/* <SidebarTeams /> */}
+      <SidebarTeams />
       {/* <SidebarDarkMode /> */}
     </div>
   );
