@@ -25,7 +25,7 @@ export default function TeamOverviewHeader({ id }) {
       const idURL = searchParams.get("id");
       const res = await fetch("/api/repositories");
       const db = await res.json();
-      const filterGroup = db.filter((el) => el.repo_id === Number(idURL));
+      const filterGroup = db.filter((el) => el.id === Number(idURL));
       const owner = filterGroup[0].owner;
       const repository = filterGroup[0].name;
 

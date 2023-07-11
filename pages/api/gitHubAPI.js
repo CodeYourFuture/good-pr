@@ -65,9 +65,8 @@ export default async (req, res) => {
 
     // Insert the repository.updated_at and total_prs into the database
     await prisma.repository.updateMany({
-      where: { repo_id: Number(repoId) },
+      where: { id: repoId },
       data: {
-        repo_id: { set: repoId },
         updated_at: { set: repositoryUpdatedAt },
         total_prs: { set: prs },
         github_url: { set: githubURL },
