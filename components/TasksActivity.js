@@ -78,7 +78,7 @@ export default function TaskActivity({ allIssues, repo }) {
                         target="_blank"
                         className="py-3 px-6  bg-[#2b3234] border-none hover:text-gray-500 duration-150 hover:bg-gray-50 border rounded-lg"
                       >
-                        See Details
+                        See Details...
                       </a>
                     </td>
                   </tr>
