@@ -65,7 +65,7 @@ export default function ProjectCard({ repo, pr }) {
             <div className="absolute top-[0] -right-2 w-3 h-3 bg-[#1A1E1F] transform rotate-45 translate-x-1/2"></div>
             <div className="absolute top-[0] right-0 w-3 h-3 bg-yellow-500 transform rotate-45 translate-x-1/2"></div>
             <p className="absolute -top-5 text-[#606467] text-xs rounded-full">
-              {totalDays} days
+              Created {totalDays} days ago
             </p>
             <p className="absolute top-4 text-[#606467] text-xs whitespace-nowrap">
               Team Progress

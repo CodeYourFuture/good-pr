@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGithub,
@@ -32,7 +31,6 @@ export default function TeamCard({ group }) {
     }
   }, [group.total_prs]);
 
-
   const lastActivityDate = (repo) => {
     if (repo.updated_at) {
       const updatedAt = new Date(repo.updated_at);
@@ -61,7 +59,7 @@ export default function TeamCard({ group }) {
     <div className="flex flex-col justify-around p-1 min-w-full sm:min-w-[345px] md:min-w-[370px] lg:min-w-[380px] h-[fit-content] bg-[#1a1e1f] text-white rounded-2xl shadow-[0_0_10px_-5px_white] transition-all duration-300 hover:transform hover:scale-105 hover:shadow-[0_0_15px_-7px_white]">
       <Link href={`/dashboard?id=${group.id}`}>
         <div className="flex flex-col items-center justify-center p-4 bg-[#070e0ea8] rounded-t-lg ">
-          <div className="w-20 h-20 border-t-[3px] border-r-[3px] rounded-full bg-[#37BCBA]">
+          <div className="w-20 h-20 border-t-[3px] border-r-[3px] rounded-full bg-[#37BCBA] overflow-hidden">
             <img
               key={group.id}
               src={`https://robohash.org/${group.id}.png`}

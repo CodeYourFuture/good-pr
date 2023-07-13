@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSitemap } from "@fortawesome/free-solid-svg-icons";
 
 export default function TeamOverviewHeader({ id }) {
+  const [groups, setGroups] = useState([]);
+
   const [repo, setRepo] = useState({});
   const [issuesClosed, setIssuesClosed] = useState([]);
   const [allIssues, setAllIssues] = useState([]);
@@ -28,7 +30,8 @@ export default function TeamOverviewHeader({ id }) {
       const filterGroup = db.filter((el) => el.id === Number(idURL));
       const owner = filterGroup[0].owner;
       const repository = filterGroup[0].name;
-
+      const groupName = filterGroup[0].team_name;
+      setGroups(groupName);
       try {
         const response = await fetch("/api/gitHubAPI", {
           method: "POST",
@@ -54,7 +57,7 @@ export default function TeamOverviewHeader({ id }) {
   return isLoading ? (
     <Loading />
   ) : (
-    <div className="flex flex-col pt-24 sm:pt-0 justify-start w-full h-full sm:h-screen">
+    <div className="flex flex-col pt-24 sm:pt-0 justify-start w-full h-full sm:h-screen overflow-scroll p-4">
       <div className="flex justify-between items-center md:pt-2 px-6">
         <div className="flex flex-col justify-between py-2">
           <ul>
@@ -67,7 +70,7 @@ export default function TeamOverviewHeader({ id }) {
                 className="font-semibold text-xl text-white p-2 hover:text-[#37BCBA]"
                 title="Link to deployed webpage"
               >
-                {repo.name}
+                {groups}
                 <FontAwesomeIcon icon={faSitemap} className="w-8 mr-3" />
               </a>
             </li>
@@ -82,15 +85,16 @@ export default function TeamOverviewHeader({ id }) {
       <div className="relative">
         <div
           ref={containerRef}
-          className="grid sm:flex gap-6 p-4 sm:p-6 lg:gap-10 xl:gap-14 2xl:gap-24 overflow-x-auto"
+          className="grid sm:flex gap-6 p-4 sm:p-6 lg:gap-10 xl:gap-14 2xl:gap-24 overflow-x-auto lg:overflow-x-clip"
         >
           <ProjectCard repo={repo} pr={pr} />
           <TeamActivityPie pr={pr} />
           <IssuesActivityCard issuesClosed={issuesClosed} />
         </div>
       </div>
-      <div className="flex justify-between items-center h-screen">
+      <div className="flex justify-between items-center min-h-full pb-16">
         <TasksActivity
+          pr={pr}
           issuesClosed={issuesClosed}
           allIssues={allIssues}
           repo={repo}
