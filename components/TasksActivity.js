@@ -13,11 +13,7 @@ const avatarBorderColor = (assigneeId) => {
   return colors[colorIndex];
 };
 
-export default function TaskActivity({ issuesClosed, issuesOpen, repo }) {
-  const issues = [...issuesClosed, ...issuesOpen].sort(
-    (a, b) => b.created_at - a.created_at
-  );
-
+export default function TaskActivity({ allIssues, repo }) {
   return (
     <div className="p-6 w-full h-full">
       <div className="flex text-white font-bold relative py-4">
@@ -37,8 +33,8 @@ export default function TaskActivity({ issuesClosed, issuesOpen, repo }) {
               </tr>
             </thead>
             <tbody className="py-4 text-white divide-y divide-gray-900">
-              {issues.map((el, idx) =>
-                el.assignees.length !== 0 ? (
+              {allIssues.map((el, idx) =>
+                el.assignees.length > 0 ? (
                   <tr key={idx}>
                     <td className="py-4 min-w-[170px] whitespace-nowrap">
                       <span className="flex flex-row items-center">

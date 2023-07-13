@@ -1,11 +1,10 @@
 const { Octokit } = require("@octokit/rest");
 import { PrismaClient } from "@prisma/client";
-
 const prisma = new PrismaClient();
-
 // Create an in-memory cache object
 const cache = {};
 
+// Create Octokit instance with the current token
 const octokit = new Octokit({
   auth: process.env.GITHUB_AUTH_TOKEN,
 });
@@ -27,20 +26,8 @@ export default async (req, res) => {
         octokit.request(`GET /repos/${owner}/${repository}/assignees`)
       ),
     ]);
-
     const contributorsNames = assigneesData.data.map((el) => el.login);
-
-    const [issuesClosedData, issuesOpenData, prData] = await Promise.all([
-      getCached(`closed_issues_${owner}_${repository}`, () =>
-        octokit.request(`GET /repos/${owner}/${repository}/issues`, {
-          state: "closed",
-        })
-      ),
-      getCached(`open_issues_${owner}_${repository}`, () =>
-        octokit.request(`GET /repos/${owner}/${repository}/issues`, {
-          state: "open",
-        })
-      ),
+    const [prData, closedIndividualIssues, issues] = await Promise.all([
       Promise.all(
         contributorsNames.map((contributorName) =>
           getCached(`pr_${owner}_${repository}_${contributorName}`, () =>
@@ -50,19 +37,30 @@ export default async (req, res) => {
           )
         )
       ),
+      Promise.all(
+        contributorsNames.map((contributorName) =>
+          getCached(
+            `pr_${owner}_${repository}_${contributorName}_closedIndividualIssues`,
+            () =>
+              octokit.request("GET /search/issues", {
+                q: ` repo:${owner}/${repository} type:issue assignee:${contributorName} state:closed`,
+              })
+          )
+        )
+      ),
+      getCached(`pr_${owner}_${repository}_issues`, () =>
+        octokit.request(`GET /repos/${owner}/${repository}/issues`)
+      ),
     ]);
-
     const repositoryUpdatedAt = repoData.data.pushed_at;
     const repoId = repoData.data.id;
     const githubURL = repoData.data.html_url;
     const demoURL = repoData.data.homepage;
-
     //calculates total number of prs
     const prs = prData
       .filter((el) => el.data.items.length > 0)
       .map((el) => el.data.total_count)
       .reduce((sum, el) => sum + el, 0);
-
     // Insert the repository.updated_at and total_prs into the database
     await prisma.repository.updateMany({
       where: { id: repoId },
@@ -74,12 +72,16 @@ export default async (req, res) => {
       },
     });
 
+    const issuesClosed = closedIndividualIssues;
+
     return res
       .status(200)
       .json([
         repoData.data,
-        issuesClosedData.data,
-        issuesOpenData.data,
+        issues.data,
+        issuesClosed
+          .filter((el) => el.data.items.length > 0)
+          .map((el) => el.data),
         prData.filter((el) => el.data.items.length > 0).map((el) => el.data),
       ]);
   } catch (error) {

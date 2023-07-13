@@ -5,9 +5,10 @@ import {
   faChartSimple,
   faChartPie,
   faInfoCircle,
+  faFaceMeh,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function TeamActivityPie({ pr }) {
+export default function IssuesActivityCard({ issuesClosed }) {
   useEffect(() => {
     import("@components/Tooltips").then((module) => {
       const handleTooltips = module.handleTooltips;
@@ -16,39 +17,44 @@ export default function TeamActivityPie({ pr }) {
   }, []);
 
   const [chartOptions, setChartOptions] = useState(null);
-  const [chartType, setChartType] = useState("pie");
-  const [prsDoneCount, setPrsDoneCount] = useState(0);
+  const [chartType, setChartType] = useState("bar");
+  const [completedIssues, setCompletedIssues] = useState(0);
   const chartContainerRef = useRef(null);
 
-  const prUsers = pr
-    .filter((user) => user.items && user.items.length > 0) // Filter out undefined or empty items
-    .map((user) => user.items[0].user.login);
+  // const issuesAssignee = issuesClosed
+  //   .filter((user) => user.items && user.items.length > 0) // Filter out undefined or empty items
+  //   .map((user) => user.items[0].user.login);
 
-  const totalContributions = pr.reduce(
-    (total, prs) => total + (prs.total_count || 0),
+  const totalIssues = issuesClosed.reduce(
+    (total, issue) => total + (issue.total_count || 0),
     0
   );
 
+  const names = issuesClosed.map((user) =>
+    user.items.filter((el) => el.assignees.length === 1)
+  );
+
+  const issuesAssignee = names
+    .map((el) => el.map((e) => e.assignees[0].login))
+    .map((el) => el[0]);
+  console.log(names);
+
   useEffect(() => {
-    const chartData = prUsers.map((user) => {
-      const prItem = pr.find(
-        (prs) =>
-          prs.items && prs.items.length > 0 && prs.items[0].user?.login === user
-      );
-      const total_count = prItem?.total_count || 0;
+    const chartData = names.map((user) => {
+      const total_count = user.length || 0;
+      console.log(total_count);
       return {
-        name: filterAndTruncateName(user, 6),
-        value: calculatePercentage(total_count, totalContributions),
-        prCount: total_count,
+        name: filterAndTruncateName(user[0].assignees[0].login, 6),
+        value: calculatePercentage(total_count, totalIssues),
+        issuesCount: total_count,
       };
     });
 
     const options = {
       tooltip: {
         trigger: "item",
-        // formatter: "{b}: {d}%",
         formatter: function (params) {
-          return `${params.name}: ${params.data.prCount} PRs`;
+          return `${params.name}: ${params.data.issuesCount} issues`;
         },
         backgroundColor: "#6064677F",
         textStyle: {
@@ -102,7 +108,7 @@ export default function TeamActivityPie({ pr }) {
         axisLabel: {
           formatter: (value) => value.substring(0, 6),
         },
-        data: prUsers.map((user) => user),
+        data: issuesAssignee.map((user) => user),
         show: chartType === "bar",
         axisLine: {
           lineStyle: {
@@ -139,7 +145,7 @@ export default function TeamActivityPie({ pr }) {
     };
 
     setChartOptions(options);
-  }, [pr, chartType]);
+  }, [issuesClosed, chartType]);
 
   const filterAndTruncateName = (name, maxLength) => {
     const filteredName = name.replace(/[^A-Za-z0-9]/g, ""); // Remove non-alphanumeric characters
@@ -147,17 +153,17 @@ export default function TeamActivityPie({ pr }) {
   };
 
   useEffect(() => {
-    // Update the count of PRs done dynamically
+    // Update the count of Issues done dynamically
     const interval = setInterval(() => {
-      if (prsDoneCount < totalContributions) {
-        setPrsDoneCount((prevCount) => prevCount + 1);
+      if (completedIssues < totalIssues) {
+        setCompletedIssues((prevCount) => prevCount + 1);
       }
     }, 40);
 
     return () => {
       clearInterval(interval);
     };
-  }, [prsDoneCount, totalContributions]);
+  }, [completedIssues, totalIssues]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -179,12 +185,12 @@ export default function TeamActivityPie({ pr }) {
     };
   }, []);
 
-  const calculatePercentage = (individualPrNumber, totalContributions) => {
-    if (totalContributions === 0) {
+  const calculatePercentage = (individualIssuesNumber, totalIssues) => {
+    if (totalIssues === 0) {
       return 0;
     }
 
-    const percentage = (100 * individualPrNumber) / totalContributions;
+    const percentage = (100 * individualIssuesNumber) / totalIssues;
     const roundedPercentage = Math.round(percentage);
 
     return roundedPercentage;
@@ -204,35 +210,33 @@ export default function TeamActivityPie({ pr }) {
 
   return (
     <div className="bg-[#1A1E1F] rounded-2xl w-full min-w-max">
-      <div className="flex flex-col justify-between max-w-xs mx-auto md:max-w-md lg:max-w-lg p-6 space-y-10 h-80 relative">
+      <div className="flex flex-col max-w-xs mx-auto md:max-w-md lg:max-w-lg p-6 space-y-10 h-80 relative">
         <div className="flex space-x-10 items-center">
           <div className="flex items-center z-10">
-            <h1 className="font-bold text-sm text-white">PR Activity</h1>
+            <h1 className="font-bold text-sm text-white">Issues Activity</h1>
             <div>
               <FontAwesomeIcon
                 icon={faInfoCircle}
-                data-tooltip-target="tooltip-info"
+                data-tooltip-target="tooltip-info-issues"
                 data-tooltip-placement="button"
                 className="w-4 h-4 ml-2 cursor-help text-white hover:text-gray-400 transition duration-300 hover:scale-110"
               />
               <div
-                id="tooltip-info"
+                id="tooltip-info-issues"
                 role="tooltip"
                 className="absolute z-10 left-0 top-12 invisible inline-block p-2 mx-6 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip border border-slate-100 dark:bg-[#1A1E1F] "
-
               >
-                This interactive chart displays the number of Pull Requests
-                (PRs) and contributions made by each contributor. Clicking on a
+                This interactive chart displays the number of issues (for the
+                repo) and contributions made by each team member. Clicking on a
                 contributor's name allows you to filter and compare their
                 individual data.
                 <div className="tooltip-arrow" data-popper-arrow></div>
               </div>
             </div>
             <div
-              id="tooltip-info-chart"
+              id="tooltip-info-chart-issues"
               role="tooltip"
               className="absolute z-10 right-16 top-12 invisible inline-block p-2 mx-6 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip border border-slate-100 dark:bg-[#1A1E1F]"
-
             >
               Change chart type
               <div className="tooltip-arrow" data-popper-arrow></div>
@@ -248,14 +252,14 @@ export default function TeamActivityPie({ pr }) {
               {chartType === "pie" ? (
                 <FontAwesomeIcon
                   icon={faChartSimple}
-                  data-tooltip-target="tooltip-info-chart"
+                  data-tooltip-target="tooltip-info-chart-issues"
                   data-tooltip-placement="button"
                   className="w-6 mr-3 text-white transition duration-300 hover:scale-110 hover:text-teal-500"
                 />
               ) : (
                 <FontAwesomeIcon
                   icon={faChartPie}
-                  data-tooltip-target="tooltip-info-chart"
+                  data-tooltip-target="tooltip-info-chart-issues"
                   data-tooltip-placement="button"
                   className="w-6 mr-3 text-white transition duration-300 hover:scale-110 hover:text-teal-500"
                 />
@@ -263,37 +267,47 @@ export default function TeamActivityPie({ pr }) {
             </a>
           </div>
         </div>
-        <div
-          className="flex justify-center items-center h-80 w-full min-w-[300px] relative"
-          style={{
-            transition: "height 1s ease-in",
-            height: chartType === "bar" ? "320px" : "360px",
-          }}
-        >
-          {chartType === "pie" ? (
-            <div className="flex justify-center items-center absolute inset-0 -mb-1">
-              <div className="text-[#F9F9F9] font-bold text-2xl">
-                {prsDoneCount}
-              </div>
-              <p className="text-[#606467] text-xs ml-[10px]">PRs Done</p>
-            </div>
-          ) : (
-            ""
-          )}
-          <div
-            className="absolute -top-[69px] w-full h-full "
-            ref={chartContainerRef}
-          >
-            {chartOptions && (
-              <ReactECharts
-                option={chartOptions}
-                container="chart-container"
-                className="h-full"
-                style={{ height: "350px" }}
-              />
-            )}
+        {issuesClosed.length === 0 ? (
+          <div className="flex flex-col justify-center items-center">
+            <FontAwesomeIcon
+              icon={faFaceMeh}
+              className="w-20 mr-3 text-white transition duration-300"
+            />
+            <div>Oh no! There are no issues for this group! </div>
           </div>
-        </div>
+        ) : (
+          <div
+            className="flex justify-center items-center h-80 w-full min-w-[300px] relative"
+            style={{
+              transition: "height 1s ease-in",
+              height: chartType === "bar" ? "320px" : "360px",
+            }}
+          >
+            {chartType === "pie" ? (
+              <div className="flex justify-center items-center absolute inset-0 -mb-1">
+                <div className="text-[#F9F9F9] font-bold text-2xl">
+                  {completedIssues}
+                </div>
+                <p className="text-[#606467] text-xs ml-[10px]">Issues Done</p>
+              </div>
+            ) : (
+              ""
+            )}
+            <div
+              className="absolute -top-[69px] w-full h-full "
+              ref={chartContainerRef}
+            >
+              {chartOptions && (
+                <ReactECharts
+                  option={chartOptions}
+                  container="chart-container"
+                  className="h-full"
+                  style={{ height: "350px" }}
+                />
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
