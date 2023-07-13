@@ -1,19 +1,23 @@
 import Image from "next/image";
 
-// Color for the avatar border based on the assignee's ID
-const avatarBorderColor = (assigneeId) => {
-  const colors = [
-    "border-yellow-200",
-    "border-orange-600",
-    "border-cyan-700",
-    "border-violet-600",
-    "border-yellow-700",
-  ];
-  const colorIndex = assigneeId % colors.length;
-  return colors[colorIndex];
-};
-
 export default function TaskActivity({ allIssues, repo }) {
+  const assigneeIds = [];
+  allIssues.forEach((el) => {
+    if (el.assignees.length > 0) {
+      assigneeIds.push(el.assignees[0].id);
+    }
+  });
+  // Color for the avatar border based on the assignee's ID
+  const avatarBorderColor = (assigneeId) => {
+    const colors = [
+      "border-yellow-200",
+      "border-orange-600",
+      "border-cyan-700",
+      "border-violet-600",
+      "border-yellow-700",
+    ];
+    return `border-${colors[assigneeIds.indexOf(assigneeId)]} `;
+  };
   return (
     <div className="p-6 w-full h-full">
       <div className="flex text-white font-bold relative py-4">
@@ -43,8 +47,8 @@ export default function TaskActivity({ allIssues, repo }) {
                           width={40}
                           height={40}
                           alt={el.assignees[0].login}
-                          className={`w-10 h-10 rounded-full border-2 object-cover ${avatarBorderColor(
-                            idx
+                          className={`w-10 h-10 rounded-full  border-2 object-cover ${avatarBorderColor(
+                            el.assignees[0].id
                           )}`}
                         />
                         <span className="pl-2 font-medium text-[1.2em] min-w-max">
