@@ -21,7 +21,7 @@ export default function TaskActivity({ issuesClosed, issuesOpen, repo }) {
   return (
     <div className="p-6 w-full h-full">
       <div className="flex text-white font-bold relative py-4">
-        Task Activity
+        Work in Progress
       </div>
       <div className="relative flex justify-center bg-[#1A1E1F] rounded-2xl overflow-auto w-full h-full">
         <div className="absolute flex justify-start top-0 w-full px-4">
@@ -29,7 +29,7 @@ export default function TaskActivity({ issuesClosed, issuesOpen, repo }) {
             <thead className="sticky top-0">
               <tr className=" text-sm font-normal bg-[#1A1E1F] h-20">
                 <th className="">Assigned to</th>
-                <th>Last Update at</th>
+                <th>Last Update</th>
                 <th>Task</th>
                 <th>Status</th>
                 <th>Project</th>
