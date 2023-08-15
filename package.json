@@ -16,7 +16,7 @@
     "@octokit/rest": "^19.0.13",
     "@vercel/og": "^0.5.8",
     "axios": "^1.4.0",
-    "chart.js": "^4.3.0",
+    "chart.js": "^4.3.1",
     "echarts": "^5.4.2",
     "echarts-for-react": "^3.0.2",
     "eslint": "8.43.0",
