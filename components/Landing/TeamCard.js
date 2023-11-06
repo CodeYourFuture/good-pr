@@ -70,7 +70,9 @@ export default function TeamCard({ group, groupStatus }) {
             </div>
 
             {/* Display the alert icon */}
-            {groupStatus === true && <AlertIcon tooltipId={tooltipIconId} />}
+
+            {groupStatus === 2 && <AlertIcon tooltipId={tooltipIconId} />}
+
           </div>
 
           <div className="text-center text-xl text-white p-2">
