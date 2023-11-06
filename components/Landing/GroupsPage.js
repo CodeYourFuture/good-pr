@@ -35,7 +35,7 @@ export default function GroupsPage() {
   };
 
   const filteredGroups = filterActive
-    ? groups.filter((group) => group.statusId === 2)
+    ? groups.filter((group) => group.groupStatus)
     : groups;
 
   const noTeamsNeedHelp = filteredGroups.length === 0;
@@ -77,7 +77,7 @@ export default function GroupsPage() {
             <TeamCard
               key={group.id}
               group={group}
-              groupStatus={group.statusId}
+              groupStatus={group.groupStatus}
             />
           ))
         )}

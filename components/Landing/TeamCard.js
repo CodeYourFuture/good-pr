@@ -52,7 +52,7 @@ export default function TeamCard({ group, groupStatus }) {
   return (
     <div
       className={`flex flex-col justify-around mb-6 p-1 pb-3 min-w-full sm:min-w-[345px] md:min-w-[360px] 2xl:min-w-[400px] h-[fit-content] bg-[#1a1e1f] text-white ${
-        groupStatus === 2 ? "drop-shadow-3xl" : ""
+        groupStatus === true ? "drop-shadow-3xl" : ""
       } rounded-2xl transition-all duration-300 hover:transform hover:scale-105 hover:shadow-[0_0_15px_-7px_white]`}
     >
       <Link href={`/dashboard?id=${group.id}`}>
@@ -70,7 +70,7 @@ export default function TeamCard({ group, groupStatus }) {
             </div>
 
             {/* Display the alert icon */}
-            {groupStatus === 1 && <AlertIcon tooltipId={tooltipIconId} />}
+            {groupStatus === true && <AlertIcon tooltipId={tooltipIconId} />}
           </div>
 
           <div className="text-center text-xl text-white p-2">
