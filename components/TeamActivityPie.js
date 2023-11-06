@@ -7,7 +7,7 @@ import {
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function TeamActivityPie({ pr }) {
+export default function TeamActivityPie({ pr, repo }) {
   useEffect(() => {
     import("@components/Tooltips").then((module) => {
       const handleTooltips = module.handleTooltips;
@@ -19,6 +19,8 @@ export default function TeamActivityPie({ pr }) {
   const [chartType, setChartType] = useState("pie");
   const [prsDoneCount, setPrsDoneCount] = useState(0);
   const chartContainerRef = useRef(null);
+  const [statusData, setStatusData] = useState([]);
+  const [repositoriesData, setRepositoriesData] = useState([]);
 
   const prUsers = pr
     .filter((user) => user.items && user.items.length > 0) // Filter out undefined or empty items
@@ -28,6 +30,100 @@ export default function TeamActivityPie({ pr }) {
     (total, prs) => total + (prs.total_count || 0),
     0
   );
+
+  //fetch from status table
+  useEffect(() => {
+    // Fetch data from the /api/status endpoint
+    fetch("/api/status")
+      .then((response) => response.json())
+      .then((data) => {
+        setStatusData(data); // Store the fetched data in state
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Fetch data from the /api/repositories endpoint
+    fetch("/api/repositories")
+      .then((response) => response.json())
+      .then((data) => {
+        setRepositoriesData(data); // Store the fetched data in state
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  const updateRecord = async (id, updatedData) => {
+    try {
+      const response = await fetch("/api/updateRepository", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id, data: updatedData }),
+      });
+
+      if (response.ok) {
+        // The record was updated successfully, you can handle it here
+        console.log("Record updated successfully.");
+      } else {
+        console.error("Error updating record:", response.status);
+      }
+    } catch (error) {
+      console.error("Error updating record:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (statusData.length > 0 && repositoriesData.length > 0) {
+      const calculateTeamStatus = (pr, totalContributions) => {
+        const individualPRPercentages = pr.map(
+          (el) => (el.total_count / totalContributions) * 100
+        );
+        const sizeOfTeam = individualPRPercentages.length;
+        const minimum = 100 / (sizeOfTeam + 1);
+        const maximum = 100 / (sizeOfTeam - 1);
+        return individualPRPercentages.every(
+          (el) => el >= minimum && el <= maximum
+        );
+      };
+
+      const findStatusAndUpdate = (statusData, statusName, statusToUpdate) => {
+        const status = statusData.find((el) => el.status === statusName);
+        if (status) {
+          statusToUpdate = status.id;
+        }
+        return statusToUpdate;
+      };
+
+      const teamStatus = calculateTeamStatus(pr, totalContributions);
+      let statusToUpdate = 0;
+
+      if (!teamStatus) {
+        statusToUpdate = findStatusAndUpdate(
+          statusData,
+          "needHelp",
+          statusToUpdate
+        );
+      } else {
+        statusToUpdate = findStatusAndUpdate(
+          statusData,
+          "onTrack",
+          statusToUpdate
+        );
+      }
+
+      const updatedData = repositoriesData.find((el) => el.id === repo.id);
+
+      if (updatedData) {
+        updatedData.statusId = statusToUpdate;
+        updateRecord(repo.id, updatedData);
+      }
+    }
+  }, [repositoriesData, statusData]);
 
   useEffect(() => {
     const chartData = prUsers.map((user) => {
