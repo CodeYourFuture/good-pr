@@ -38,10 +38,6 @@ export default function IssuesActivityCard({ issuesClosed, pr }) {
   //to have the same trainees as in the project Card
   const trainees = (pr && pr.filter((el) => el.total_count !== 0)) || [];
   const issuesAssignee = trainees.map((trainee) => trainee.items[0].user.login);
-  console.log(
-    "tr",
-    trainees.map((trainee) => trainee.items[0].user.login)
-  );
 
   useEffect(() => {
     const chartData = names.map((user, index) => {
