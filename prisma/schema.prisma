@@ -11,16 +11,22 @@ datasource db {
 }
 
 model Repository {
-  id Int @id @default(autoincrement())
+  id         Int       @id
+  name       String?
+  owner      String?
+  team_name  String?
+  updated_at DateTime? @updatedAt
+  total_prs  Int?
+  github_url String?
+  demo_url   String?
+  cohort     String?
+  region     String?
+  statusId   Int?
+  Status     Status?   @relation(fields: [statusId], references: [id])
+}
 
-  name          String?
-  owner         String?
-  team_name     String?
-  updated_at    DateTime?  @updatedAt
-  total_prs     Int?
-  github_url    String?
-  demo_url      String?
-  cohort        String?
-  region        String?
-
+model Status {
+  id         Int          @id @default(autoincrement())
+  status     String
+  Repository Repository[]
 }
