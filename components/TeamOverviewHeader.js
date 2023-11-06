@@ -88,7 +88,7 @@ export default function TeamOverviewHeader({ id }) {
           className="grid sm:flex gap-6 p-4 sm:p-6 lg:gap-10 xl:gap-14 2xl:gap-24 overflow-x-auto lg:overflow-y-clip"
         >
           <ProjectCard repo={repo} pr={pr} />
-          <TeamActivityPie pr={pr} />
+          <TeamActivityPie pr={pr} repo={repo} />
           <IssuesActivityCard issuesClosed={issuesClosed} pr={pr} />
         </div>
       </div>
